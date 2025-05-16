@@ -7,13 +7,13 @@ import Link from "next/link";
 
 export const PinContainer = ({
 	children,
-	title,
+	// title,
 	href,
 	className,
 	containerClassName,
 }: {
 	children: React.ReactNode;
-	title?: string;
+	// title?: string;
 	href: string;
 	className?: string;
 	containerClassName?: string;

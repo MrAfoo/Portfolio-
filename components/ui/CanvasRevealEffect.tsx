@@ -174,7 +174,7 @@ const ShaderMaterial = ({
   });
 
   const getUniforms = () => {
-    const preparedUniforms: Record<string, { value: any }> = {};
+    const preparedUniforms: Record<string, { value: number | number[] | number[][] | THREE.Vector2 | THREE.Vector3 | THREE.Vector3[] }> = {};
 
     for (const name in uniforms) {
       const uniform = uniforms[name];
