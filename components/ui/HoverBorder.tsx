@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 type Direction = "TOP" | "LEFT" | "BOTTOM" | "RIGHT";
 
-interface HoverBorderGradientProps extends HTMLAttributes<HTMLElement> {
+interface HoverBorderGradientProps extends Omit<HTMLAttributes<HTMLElement>, 'as'> {
   as?: ElementType;
   containerClassName?: string;
   className?: string;
@@ -58,34 +58,38 @@ export function HoverBorderGradient({
     }
   }, [hovered, duration, rotateDirection]);
 
-  return (
-    <Tag
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className={cn(
-        "relative flex rounded-full border content-center bg-black/20 hover:bg-black/10 transition duration-500 dark:bg-white/20 items-center flex-col flex-nowrap gap-10 h-min justify-center overflow-visible p-px decoration-clone w-fit",
-        containerClassName
-      )}
-      {...props}
-    >
-      <div className={cn("w-auto text-white z-10 bg-black px-4 py-2 rounded-[inherit]", className)}>
-        {children}
-      </div>
-      <motion.div
-        className="flex-none inset-0 overflow-hidden absolute z-0 rounded-[inherit]"
-        style={{
-          filter: "blur(2px)",
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-        }}
-        initial={{ background: movingMap[direction] }}
-        animate={{
-          background: hovered ? [movingMap[direction], highlight] : movingMap[direction],
-        }}
-        transition={{ ease: "linear", duration: duration ?? 1 }}
-      />
-      <div className="bg-black absolute z-1 flex-none inset-[2px] rounded-[100px]" />
-    </Tag>
-  );
+  // Replace the return statement with:
+return React.createElement(
+  Tag,
+  {
+    onMouseEnter: () => setHovered(true),
+    onMouseLeave: () => setHovered(false),
+    className: cn(
+      "relative flex rounded-full border content-center bg-black/20 hover:bg-black/10 transition duration-500 dark:bg-white/20 items-center flex-col flex-nowrap gap-10 h-min justify-center overflow-visible p-px decoration-clone w-fit",
+      containerClassName
+    ),
+    ...props
+  },
+  <div className="relative w-full h-full">
+    <div className={cn("w-auto text-white z-10 bg-black px-4 py-2 rounded-[inherit]", className)}>
+      {children}
+    </div>
+    <motion.div
+      className="flex-none inset-0 overflow-hidden absolute z-0 rounded-[inherit]"
+      style={{
+        filter: "blur(2px)",
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+      }}
+      initial={{ background: movingMap[direction] }}
+      animate={{
+        background: hovered ? [movingMap[direction], highlight] : movingMap[direction],
+      }}
+      transition={{ ease: "linear", duration: duration ?? 1 }}
+    />
+    <div className="bg-black absolute z-1 flex-none inset-[2px] rounded-[100px]" />
+  </div>
+);
+
 }
