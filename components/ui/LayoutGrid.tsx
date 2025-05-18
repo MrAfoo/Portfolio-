@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -7,7 +7,7 @@ import { Button } from "./MovingBorders";
 
 type Card = {
   id: number;
-  content: JSX.Element | React.ReactNode | string;
+  content: ReactNode;
   className: string;
   thumbnail: string;
 };
