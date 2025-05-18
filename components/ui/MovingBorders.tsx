@@ -16,9 +16,9 @@ import {
 import { cn } from "@/lib/utils";
 
 // Button Props
-interface ButtonProps extends HTMLAttributes<HTMLElement> {
+interface ButtonProps extends Omit<HTMLAttributes<HTMLElement>, 'as'> {
   borderRadius?: string;
-  children: ReactNode;
+  children?: ReactNode;
   as?: ElementType;
   containerClassName?: string;
   borderClassName?: string;
@@ -37,16 +37,19 @@ export function Button({
   className,
   ...otherProps
 }: ButtonProps) {
-  return (
-    <Component
-      className={cn(
+  return React.createElement(
+    Component,
+    {
+      className: cn(
         "bg-transparent relative text-xl p-[1px] overflow-hidden md:col-span-2 md:row-span-1",
         containerClassName
-      )}
-      style={{ borderRadius }}
-      {...otherProps}
-    >
+      ),
+      style: { borderRadius },
+      ...otherProps
+    },
+    [
       <div
+        key="border"
         className="absolute inset-0"
         style={{ borderRadius: `calc(${borderRadius} * 0.96)` }}
       >
@@ -58,9 +61,9 @@ export function Button({
             )}
           />
         </MovingBorder>
-      </div>
-
+      </div>,
       <div
+        key="content"
         className={cn(
           "relative bg-slate-900/[0.] border border-slate-800 backdrop-blur-xl text-white flex items-center justify-center w-full h-full text-sm antialiased",
           className
@@ -71,7 +74,7 @@ export function Button({
       >
         {children}
       </div>
-    </Component>
+    ]
   );
 }
 
@@ -93,7 +96,7 @@ export const MovingBorder = ({
 }: MovingBorderProps) => {
   const pathRef = useRef<SVGRectElement>(null);
   const progress = useMotionValue(0);
-
+  
   useAnimationFrame((time) => {
     const length = pathRef.current?.getTotalLength();
     if (length) {
@@ -105,12 +108,13 @@ export const MovingBorder = ({
   const x = useTransform(progress, (val) =>
     pathRef.current?.getPointAtLength(val)?.x ?? 0
   );
+  
   const y = useTransform(progress, (val) =>
     pathRef.current?.getPointAtLength(val)?.y ?? 0
   );
-
+  
   const transform = useMotionTemplate`translateX(${x}px) translateY(${y}px) translateX(-50%) translateY(-50%)`;
-
+  
   return (
     <>
       <svg
